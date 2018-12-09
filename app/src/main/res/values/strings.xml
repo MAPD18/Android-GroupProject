@@ -22,4 +22,11 @@
     <string name="fab_restaurant">Add Restaurant</string>
     <string name="fab_movie_theater">Add Movie Theater</string>
     <string name="fab_bar">Add Bar</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="tab_title_map">Map</string>
+    <string name="tab_title_list">List</string>
+    <string name="action_bar_menu_add_title">Add</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

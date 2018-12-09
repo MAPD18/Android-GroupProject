@@ -5,6 +5,8 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.location.places.Place;
+
 import java.util.List;
 
 public class FavoritePlaceViewModel extends AndroidViewModel {
@@ -22,7 +24,7 @@ public class FavoritePlaceViewModel extends AndroidViewModel {
         return allFavoritePlaces;
     }
 
-    public void insert(FavoritePlace favoritePlace) {
-        favoritePlaceRepository.insert(favoritePlace);
+    public void insert(Place place, FavoritePlace.Category selectedCategory) {
+        favoritePlaceRepository.insert(new FavoritePlace(place, selectedCategory));
     }
 }

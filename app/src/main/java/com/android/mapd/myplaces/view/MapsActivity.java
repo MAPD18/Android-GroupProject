@@ -1,4 +1,4 @@
-package com.android.mapd.myplaces;
+package com.android.mapd.myplaces.view;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -10,12 +10,14 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.android.mapd.myplaces.R;
 import com.android.mapd.myplaces.model.FavoritePlace;
 import com.android.mapd.myplaces.model.FavoritePlaceViewModel;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,24 +35,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
     private GoogleMap map;
 
     @BindView(R.id.coordinator)
-    CoordinatorLayout coordinatorLayout;
-
-    @BindView(R.id.restaurantFAB)
-    FloatingActionButton restaurantFAB;
-
-    @BindView(R.id.movieTheaterFAB)
-    FloatingActionButton movieTheaterFAB;
-
-    @BindView(R.id.barFAB)
-    FloatingActionButton barFAB;
-
-    @BindView(R.id.floatingActionMenu)
-    FloatingActionMenu floatingActionMenu;
+    public CoordinatorLayout coordinatorLayout;
 
     private FavoritePlaceViewModel viewModel;
     int PLACE_PICKER_REQUEST = 1;
@@ -76,7 +66,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        initFABButtons();
         initMarkerCustomIcons();
     }
 
@@ -94,12 +83,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .icon(markerDictionary.get(favoritePlace.getCategory()))
                     .title(favoritePlace.getName()));
         }
-    }
-
-    private void initFABButtons() {
-        restaurantFAB.setOnClickListener(this);
-        movieTheaterFAB.setOnClickListener(this);
-        barFAB.setOnClickListener(this);
     }
 
     private void buildPlacePicker() {
@@ -120,12 +103,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                FavoritePlace favoritePlace = new FavoritePlace(PlacePicker.getPlace(this, data), selectedCategory);
-                viewModel.insert(favoritePlace);
+                Place place = PlacePicker.getPlace(this, data);
+                viewModel.insert(place, selectedCategory);
 
-                String toastMsg = String.format("New Place: %s added to Favorites", favoritePlace.getName());
+                String toastMsg = String.format("New Place: %s added to Favorites", place.getName());
                 Snackbar.make(coordinatorLayout, toastMsg, Snackbar.LENGTH_LONG).show();
-                floatingActionMenu.close(true);
             }
         }
     }
@@ -140,21 +122,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 12f));
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.restaurantFAB:
-                selectedCategory = FavoritePlace.Category.RESTAURANT;
-                break;
-
-            case R.id.movieTheaterFAB:
-                selectedCategory = FavoritePlace.Category.MOVIE_THEATER;
-                break;
-
-            case R.id.barFAB:
-                selectedCategory = FavoritePlace.Category.BAR;
-                break;
-        }
-        buildPlacePicker();
-    }
 }
