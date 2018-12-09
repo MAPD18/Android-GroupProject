@@ -4,6 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
@@ -29,17 +31,21 @@ public class FavoritePlace {
     private String phoneNumber;
     @ColumnInfo(name = "rating")
     private float rating;
+    @TypeConverters(CategoryConverter.class)
+    private Category category;
+
 
     public FavoritePlace() {
     }
 
-    public FavoritePlace(Place place) {
+    public FavoritePlace(Place place, Category category) {
         this.name = place.getName().toString();
         this.address = place.getAddress() == null ? "" : place.getAddress().toString();
         this.coordinates = new Coordinates(place.getLatLng());
         this.uriWebsite = place.getWebsiteUri() == null ? "" : place.getWebsiteUri().getPath();
         this.phoneNumber = place.getPhoneNumber() == null ? "" : place.getPhoneNumber().toString();
         this.rating = place.getRating();
+        this.category = category;
     }
 
     public int getId() {
@@ -118,4 +124,41 @@ public class FavoritePlace {
             this.lng = latLng.longitude;
         }
     }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public enum Category {
+        RESTAURANT(0), MOVIE_THEATER(1), BAR(2);
+
+        private final int value;
+
+        Category(int value) {
+            this.value = value;
+        }
+    }
+
+    public static class CategoryConverter {
+
+        @TypeConverter
+        public static Category toCategory(int value) {
+            if (value == Category.RESTAURANT.value)
+                    return Category.RESTAURANT;
+            else if (value == Category.MOVIE_THEATER.value)
+                return Category.MOVIE_THEATER;
+            else
+                return Category.BAR;
+        }
+
+        @TypeConverter
+        public static int toInt(Category category) {
+            return category.value;
+        }
+    }
+
 }

@@ -9,7 +9,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.mapd.myplaces.model.FavoritePlace;
 import com.android.mapd.myplaces.model.FavoritePlaceViewModel;
@@ -22,10 +21,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,6 +54,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private FavoritePlaceViewModel viewModel;
     int PLACE_PICKER_REQUEST = 1;
+    private FavoritePlace.Category selectedCategory;
+    private HashMap<FavoritePlace.Category, BitmapDescriptor> markerDictionary = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +77,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         initFABButtons();
+        initMarkerCustomIcons();
+    }
+
+    private void initMarkerCustomIcons() {
+        markerDictionary.put(FavoritePlace.Category.RESTAURANT, BitmapDescriptorFactory.fromResource(R.drawable.green_pin));
+        markerDictionary.put(FavoritePlace.Category.MOVIE_THEATER, BitmapDescriptorFactory.fromResource(R.drawable.blue_pin));
+        markerDictionary.put(FavoritePlace.Category.BAR, BitmapDescriptorFactory.fromResource(R.drawable.purple_pin));
     }
 
     private void refreshMarkers(List<FavoritePlace> favoritePlaces) {
+        map.clear();
         for (FavoritePlace favoritePlace : favoritePlaces) {
             map.addMarker(new MarkerOptions()
                     .position(favoritePlace.getCoordinatesAsLatLng())
+                    .icon(markerDictionary.get(favoritePlace.getCategory()))
                     .title(favoritePlace.getName()));
         }
     }
@@ -107,7 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                FavoritePlace favoritePlace = new FavoritePlace(PlacePicker.getPlace(this, data));
+                FavoritePlace favoritePlace = new FavoritePlace(PlacePicker.getPlace(this, data), selectedCategory);
                 viewModel.insert(favoritePlace);
 
                 String toastMsg = String.format("New Place: %s added to Favorites", favoritePlace.getName());
@@ -129,6 +142,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.restaurantFAB:
+                selectedCategory = FavoritePlace.Category.RESTAURANT;
+                break;
+
+            case R.id.movieTheaterFAB:
+                selectedCategory = FavoritePlace.Category.MOVIE_THEATER;
+                break;
+
+            case R.id.barFAB:
+                selectedCategory = FavoritePlace.Category.BAR;
+                break;
+        }
         buildPlacePicker();
     }
 }
