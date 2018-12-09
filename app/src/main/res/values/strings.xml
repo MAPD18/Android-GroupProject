@@ -18,8 +18,8 @@
     <string name="error_passwords_does_not_match">The passwords does not match</string>
     <string name="error_register">An error occurred during register, try again in a moment</string>
     <string name="error_authentication">Email or Password invalid!</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
     <string name="new_user_button_text"><u>New User? Register Now!</u></string>
+    <string name="fab_restaurant">Add Restaurant</string>
+    <string name="fab_movie_theater">Add Movie Theater</string>
+    <string name="fab_bar">Add Bar</string>
 </resources>

@@ -35,19 +35,37 @@
                 android:id="@+id/restaurantFAB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/plus_icon" />
+                android:src="@drawable/restaurant_icon"
+                android:scaleType="center"
+                map:fab_colorNormal="@color/green"
+                map:fab_colorPressed="@color/darker_green"
+                map:fab_colorRipple="#99FFFFFF"
+                map:fab_size="mini"
+                map:fab_label="@string/fab_restaurant"/>
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/movieTheaterFAB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/plus_icon" />
+                android:src="@drawable/movie_theater_icon"
+                android:scaleType="center"
+                map:fab_colorNormal="@color/blue"
+                map:fab_colorPressed="@color/darker_blue"
+                map:fab_colorRipple="#99FFFFFF"
+                map:fab_size="mini"
+                map:fab_label="@string/fab_movie_theater"/>
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/barFAB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/plus_icon" />
+                android:src="@drawable/bar_icon"
+                android:scaleType="center"
+                map:fab_colorNormal="@color/purple"
+                map:fab_colorPressed="@color/darker_purple"
+                map:fab_colorRipple="@android:color/darker_gray"
+                map:fab_size="mini"
+                map:fab_label="@string/fab_bar"/>
 
         </com.github.clans.fab.FloatingActionMenu>
 
