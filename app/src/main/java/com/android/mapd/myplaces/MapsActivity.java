@@ -4,6 +4,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -33,6 +35,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap map;
 
+    @BindView(R.id.coordinator)
+    CoordinatorLayout coordinatorLayout;
+
     @BindView(R.id.restaurantFAB)
     FloatingActionButton restaurantFAB;
 
@@ -58,7 +63,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         viewModel.getAllFavoritePlaces().observe(this, new Observer<List<FavoritePlace>>() {
             @Override
             public void onChanged(@Nullable List<FavoritePlace> favoritePlaces) {
-                refreshMarkers(favoritePlaces);
+                if (favoritePlaces != null)
+                    refreshMarkers(favoritePlaces);
             }
         });
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -73,7 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for (FavoritePlace favoritePlace : favoritePlaces) {
             map.addMarker(new MarkerOptions()
                     .position(favoritePlace.getCoordinatesAsLatLng())
-                    .title(favoritePlace.getName().toString()));
+                    .title(favoritePlace.getName()));
         }
     }
 
@@ -83,7 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         barFAB.setOnClickListener(this);
     }
 
-    private void buildPLacePicker() {
+    private void buildPlacePicker() {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         builder.setLatLngBounds(LatLngBounds.builder()
                 .include(new LatLng(43.632318, -79.454857))
@@ -104,8 +110,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 FavoritePlace favoritePlace = new FavoritePlace(PlacePicker.getPlace(this, data));
                 viewModel.insert(favoritePlace);
 
-                String toastMsg = String.format("Place: %s added to Favorites", favoritePlace.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+                String toastMsg = String.format("New Place: %s added to Favorites", favoritePlace.getName());
+                Snackbar.make(coordinatorLayout, toastMsg, Snackbar.LENGTH_LONG).show();
                 floatingActionMenu.close(true);
             }
         }
@@ -123,6 +129,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onClick(View v) {
-        buildPLacePicker();
+        buildPlacePicker();
     }
 }
