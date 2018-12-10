@@ -31,6 +31,10 @@ public class FavoritePlaceRepository {
         new DeleteAsyncTask(favoritePlaceDao).execute(favoritePlace);
     }
 
+    public void nukeFavoritePlacesTable() {
+        new NukeFavoritePlacesTableAsyncTask(favoritePlaceDao).execute();
+    }
+
     private static class InsertAsyncTask extends AsyncTask<FavoritePlace, Void, Void> {
 
         private FavoritePlaceDao favoritePlaceDao;
@@ -57,6 +61,21 @@ public class FavoritePlaceRepository {
         @Override
         protected Void doInBackground(FavoritePlace... favoritePlaces) {
             favoritePlaceDao.delete(favoritePlaces[0]);
+            return null;
+        }
+    }
+
+    private static class NukeFavoritePlacesTableAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private FavoritePlaceDao favoritePlaceDao;
+
+        NukeFavoritePlacesTableAsyncTask(FavoritePlaceDao favoritePlaceDao) {
+            this.favoritePlaceDao = favoritePlaceDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            favoritePlaceDao.nukeFavoritePlacesTable();
             return null;
         }
     }

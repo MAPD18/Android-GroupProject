@@ -31,4 +31,8 @@ public class FavoritePlaceViewModel extends AndroidViewModel {
     public void delete(FavoritePlace favoritePlace) {
         favoritePlaceRepository.delete(favoritePlace);
     }
+
+    public void nukeFavoritePLacesTable() {
+        favoritePlaceRepository.nukeFavoritePlacesTable();
+    }
 }

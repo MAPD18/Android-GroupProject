@@ -19,4 +19,8 @@ public interface FavoritePlaceDao {
 
     @Delete
     void delete(FavoritePlace favoritePlace);
+
+    @Query("DELETE from " + FavoritePlace.TABLE_NAME)
+    void nukeFavoritePlacesTable();
+
 }

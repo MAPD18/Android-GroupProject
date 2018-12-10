@@ -16,7 +16,6 @@ import android.widget.FrameLayout;
 import com.android.mapd.myplaces.view.fragment.ListFragment;
 import com.android.mapd.myplaces.view.fragment.MapFragment;
 import com.android.mapd.myplaces.R;
-import com.android.mapd.myplaces.dummy.DummyContent;
 import com.android.mapd.myplaces.model.FavoritePlace;
 import com.android.mapd.myplaces.model.FavoritePlaceViewModel;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -25,6 +24,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionbar_menu_add) {
             buildPlacePicker();
+        } else if (item.getItemId() == R.id.actionbar_menu_logout) {
+            logoff();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -112,6 +114,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         } catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
+    }
+
+    private void logoff() {
+        viewModel.nukeFavoritePLacesTable();
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

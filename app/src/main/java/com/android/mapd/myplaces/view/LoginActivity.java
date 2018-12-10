@@ -87,7 +87,6 @@ public class LoginActivity extends AppCompatActivity{
 
     private void startRegisterActivity() {
         startActivity(new Intent(this, RegisterActivity.class));
-        finish();
     }
 
     private void attemptLogin() {

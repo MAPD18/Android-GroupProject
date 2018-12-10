@@ -5,5 +5,9 @@
         android:id="@+id/actionbar_menu_add"
         android:icon="@drawable/ic_add"
         android:title="@string/action_bar_menu_add_title"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/actionbar_menu_logout"
+        android:title="@string/action_bar_menu_logout_title"
+        app:showAsAction="never" />
 </menu>
