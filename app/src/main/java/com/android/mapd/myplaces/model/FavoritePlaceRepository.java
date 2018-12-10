@@ -27,6 +27,10 @@ public class FavoritePlaceRepository {
         return allFavoritePlaces;
     }
 
+    public void delete(FavoritePlace favoritePlace) {
+        new DeleteAsyncTask(favoritePlaceDao).execute(favoritePlace);
+    }
+
     private static class InsertAsyncTask extends AsyncTask<FavoritePlace, Void, Void> {
 
         private FavoritePlaceDao favoritePlaceDao;
@@ -38,6 +42,21 @@ public class FavoritePlaceRepository {
         @Override
         protected Void doInBackground(FavoritePlace... favoritePlaces) {
             favoritePlaceDao.insert(favoritePlaces[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteAsyncTask extends AsyncTask<FavoritePlace, Void, Void> {
+
+        private FavoritePlaceDao favoritePlaceDao;
+
+        DeleteAsyncTask(FavoritePlaceDao favoritePlaceDao) {
+            this.favoritePlaceDao = favoritePlaceDao;
+        }
+
+        @Override
+        protected Void doInBackground(FavoritePlace... favoritePlaces) {
+            favoritePlaceDao.delete(favoritePlaces[0]);
             return null;
         }
     }

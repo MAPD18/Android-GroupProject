@@ -42,7 +42,7 @@ public class FavoritePlace {
         this.name = place.getName().toString();
         this.address = place.getAddress() == null ? "" : place.getAddress().toString();
         this.coordinates = new Coordinates(place.getLatLng());
-        this.uriWebsite = place.getWebsiteUri() == null ? "" : place.getWebsiteUri().getPath();
+        this.uriWebsite = place.getWebsiteUri() == null ? "" : place.getWebsiteUri().toString();
         this.phoneNumber = place.getPhoneNumber() == null ? "" : place.getPhoneNumber().toString();
         this.rating = place.getRating();
         this.category = category;

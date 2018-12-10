@@ -27,4 +27,8 @@ public class FavoritePlaceViewModel extends AndroidViewModel {
     public void insert(Place place, FavoritePlace.Category selectedCategory) {
         favoritePlaceRepository.insert(new FavoritePlace(place, selectedCategory));
     }
+
+    public void delete(FavoritePlace favoritePlace) {
+        favoritePlaceRepository.delete(favoritePlace);
+    }
 }

@@ -127,8 +127,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-
+    public void onFavoritePlaceDeleted(FavoritePlace item) {
+        viewModel.delete(item);
     }
 
     private enum TabFragment {

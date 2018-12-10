@@ -4,22 +4,32 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.android.mapd.myplaces.model.FavoritePlace;
 import com.android.mapd.myplaces.view.fragment.ListFragment.OnListFragmentInteractionListener;
 import com.android.mapd.myplaces.R;
-import com.android.mapd.myplaces.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MyFavoritePlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyFavoritePlaceRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private List<FavoritePlace> dataList;
+    private final OnListFragmentInteractionListener listener;
 
-    public MyFavoritePlaceRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    public MyFavoritePlaceRecyclerViewAdapter(OnListFragmentInteractionListener listener) {
+        dataList = new ArrayList<>();
+        this.listener = listener;
+    }
+
+    public void setDataList(List<FavoritePlace> newList) {
+        dataList = newList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -31,17 +41,18 @@ public class MyFavoritePlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyF
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        FavoritePlace favoritePlace = dataList.get(position);
+        holder.placeName.setText(favoritePlace.getName());
+        holder.address.setText(favoritePlace.getAddress());
+        holder.website.setText(favoritePlace.getUriWebsite());
+        holder.phoneNumber.setText(favoritePlace.getPhoneNumber());
+        holder.ratingBar.setRating(favoritePlace.getRating());
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                if (null != listener) {
+                    listener.onFavoritePlaceDeleted(favoritePlace);
                 }
             }
         });
@@ -49,25 +60,27 @@ public class MyFavoritePlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyF
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return dataList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.placeName)
+        TextView placeName;
+        @BindView(R.id.address)
+        TextView address;
+        @BindView(R.id.website)
+        TextView website;
+        @BindView(R.id.phoneNumber)
+        TextView phoneNumber;
+        @BindView(R.id.ratingBar)
+        RatingBar ratingBar;
+        @BindView(R.id.deleteButton)
+        TextView deleteButton;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            ButterKnife.bind(this, view);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
     }
 }
