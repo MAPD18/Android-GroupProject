@@ -32,4 +32,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="place_item_ratting_label">Rating:</string>
     <string name="place_item_button_label">DELETE</string>
+
+    <!-- Category Dialog -->
+    <string name="chose_category_dialog_title">In which category should your new place be saved?</string>
+    <string-array name="categories">
+        <item>Restaurant</item>
+        <item>Movie Theater</item>
+        <item>Bar</item>
+    </string-array>
 </resources>

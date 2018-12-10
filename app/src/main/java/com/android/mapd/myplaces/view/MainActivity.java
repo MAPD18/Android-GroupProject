@@ -1,12 +1,16 @@
 package com.android.mapd.myplaces.view;
 
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public FrameLayout content;
 
     private FragmentManager fragmentManager;
-    private FavoritePlaceViewModel viewModel;
+    private static FavoritePlaceViewModel viewModel;
+    private static Place selectedPlace;
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -126,11 +131,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(this, data);
-                viewModel.insert(place, FavoritePlace.Category.BAR); // TODO ALterar Category, fazer selecao
-
-                String toastMsg = String.format("New Place: %s added to Favorites", place.getName());
-                //Snackbar.make(coordinatorLayout, toastMsg, Snackbar.LENGTH_LONG).show();
+                selectedPlace = PlacePicker.getPlace(this, data);
+                new ChoseCategoryDialog().show(getSupportFragmentManager(), "categories");
             }
         }
     }
@@ -142,5 +144,37 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private enum TabFragment {
         MAP, LIST
+    }
+
+    public static class ChoseCategoryDialog extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.chose_category_dialog_title)
+                    .setItems(R.array.categories, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            FavoritePlace.Category selectedCategory = FavoritePlace.Category.RESTAURANT;
+                            switch (which) {
+                                case 0:
+                                    selectedCategory = FavoritePlace.Category.RESTAURANT;
+                                    break;
+
+                                case 1:
+                                    selectedCategory = FavoritePlace.Category.MOVIE_THEATER;
+                                    break;
+
+                                case 2:
+                                    selectedCategory = FavoritePlace.Category.BAR;
+                                    break;
+
+                            }
+                            viewModel.insert(selectedPlace, selectedCategory);
+                            selectedPlace = null;
+                        }
+                    });
+            return builder.create();
+        }
+
     }
 }
