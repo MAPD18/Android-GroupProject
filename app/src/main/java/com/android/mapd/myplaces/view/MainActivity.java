@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.android.mapd.myplaces.AppConstants;
 import com.android.mapd.myplaces.view.fragment.ListFragment;
 import com.android.mapd.myplaces.view.fragment.MapFragment;
 import com.android.mapd.myplaces.R;
@@ -140,6 +141,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public void onFavoritePlaceDeleted(FavoritePlace item) {
         viewModel.delete(item);
+    }
+
+    @Override
+    public void onUriClicked(String uri) {
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra(AppConstants.PLACE_WEBSITE_URI_KEY, uri);
+        startActivity(intent);
     }
 
     private enum TabFragment {

@@ -45,6 +45,13 @@ public class MyFavoritePlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyF
         holder.placeName.setText(favoritePlace.getName());
         holder.address.setText(favoritePlace.getAddress());
         holder.website.setText(favoritePlace.getUriWebsite());
+        holder.website.setClickable(true);
+        holder.website.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onUriClicked(favoritePlace.getUriWebsite());
+            }
+        });
         holder.phoneNumber.setText(favoritePlace.getPhoneNumber());
         holder.ratingBar.setRating(favoritePlace.getRating());
 

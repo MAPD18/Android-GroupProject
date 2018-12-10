@@ -84,5 +84,6 @@ public class ListFragment extends Fragment {
 
     public interface OnListFragmentInteractionListener {
         void onFavoritePlaceDeleted(FavoritePlace item);
+        void onUriClicked(String uri);
     }
 }
